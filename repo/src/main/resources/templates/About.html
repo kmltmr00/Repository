@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hakkında ve İletişim</title>
+  <style>
+    /* Common Styles for All Pages */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(-45deg, #6a11cb, #2575fc, #ff6f61, #ffd700);
+        background-size: 400% 400%;
+        animation: gradientBG 10s ease infinite;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: auto; /* Kaydırma çubuğunu ekler */
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    header {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: center;
+        position: relative;
+    }
+    
+    header .logo {
+        position: absolute;
+        left: 20px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    
+    nav {
+        display: flex;
+        gap: 15px;
+    }
+    
+    nav a {
+        text-decoration: none;
+        color: white;
+        font-size: 16px;
+        transition: color 0.3s;
+    }
+    
+    nav a:hover {
+        color: #ffd700;
+    }
+    
+    main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        gap: 40px;
+        overflow: auto; /* İçeriğin taşmasını sağlar ve kaydırma çubuğu gösterir */
+        height: 100vh; /* Sayfa boyutuna uyumlu kalmasını sağlar */
+    }
+    
+    .about-section, .contact-section {
+        background: rgba(255, 255, 255, 0.8);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        max-width: 900px;
+        width: 100%;
+        margin: auto;
+    }
+    
+    .about-section h1, .contact-section h1 {
+        font-size: 36px;
+        color: #6a11cb;
+        margin-bottom: 20px;
+    }
+    
+    .about-section p {
+        font-size: 18px;
+        color: #555;
+        margin-bottom: 30px;
+    }
+    
+    .team {
+        display: flex;
+        justify-content: space-around;
+        gap: 20px;
+    }
+    
+    .team-member {
+        text-align: center;
+    }
+    
+    .team-member img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+    }
+    
+    .input-group {
+        margin-bottom: 20px;
+    }
+    
+    input, textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        background: #f9f9f9;
+        transition: all 0.3s ease;
+    }
+    
+    input:focus, textarea:focus {
+        border-color: #6a11cb;
+        outline: none;
+        background: #fff;
+    }
+    
+    textarea {
+        height: 150px;
+        resize: vertical;
+    }
+    
+    button {
+        width: 100%;
+        padding: 12px;
+        background-color: #6a11cb;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    
+    button:hover {
+        background-color: #2575fc;
+        transform: translateY(-2px);
+    }
+    
+    footer {
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    /* Responsive Design: Small Screen Adjustments */
+    @media (max-width: 768px) {
+        header {
+            padding: 10px;
+        }
+    
+        .about-section, .contact-section {
+            padding: 20px;
+            width: 90%;
+            max-width: none;
+        }
+    
+        h1 {
+            font-size: 28px; /* Title size smaller on smaller screens */
+        }
+    
+        .input-group input, .input-group textarea {
+            padding: 10px;
+            font-size: 14px; /* Smaller text and input fields on smaller screens */
+        }
+    
+        button {
+            padding: 10px;
+            font-size: 14px;
+        }
+    }
+    
+    /* For very small screens, like mobile phones */
+    @media (max-width: 480px) {
+        .about-section, .contact-section {
+            padding: 15px;
+            width: 95%;
+        }
+    
+        h1 {
+            font-size: 24px; /* Title size even smaller on very small screens */
+        }
+    
+        .input-group input, .input-group textarea {
+            font-size: 14px;
+            padding: 8px;
+        }
+    
+        button {
+            padding: 8px;
+            font-size: 14px;
+        }
+    }
+    .instagram{
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        margin-right:  30px;
+    }
+    
+  </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">My Repository</div>
+        <nav>
+            <a href="http://localhost:8080/api/users/HomePage">Home</a>
+            <a href="http://localhost:8080/api/users/Project">Project</a>
+            <a href="http://localhost:8080/api/users/About">About & Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- About Section -->
+        <section class="about-section">
+            <h1>Hakkında</h1>
+            <p>MUŞ ALPARSLAN ÜNİVERSİTESİNDE öğrenim görmekteyim ve öğrencilik hayatımda kendimi geliştiriyorum ve bu web sitesini yaptım.</p>
+            <div class="team">
+                
+                <div class="team-member">
+                    <img src="/photo.jpg" alt="Ekibimizden 1. Üye" style="pointer-events:none;">
+                    <p>Ali Kemal Tümer - Yazılım Geliştirici</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <h1>İletişime Geçin</h1>
+            <form action="#" method="post">
+            <a href="https://www.instagram.com/kmltmr00/" target="_blank"> <img class="instagram" src="/instagram.jpg" alt="Instagram"></a>
+                <a href="https://www.linkedin.com/in/kemal-t%C3%BCmer-602098252/" target="_blank"><img class="instagram" src="/linkedin.png" alt="Instagram"> </a>
+              <a href="https://github.com/kmltmr00" target="_blank" > <img class="instagram" src="/gtihub.png" alt="github"></a>
+            <a href="https://mail.google.com/mail/u/0/#inbox?compose=GTvVlcSGMvdKxdSQQGwlrjMrjpFWjBFTbWNmjWzWGMGJbNGLQLJnbkCFLJsClKPPBCVpDspDLzhQg" target="_blank"> <img class="instagram" src="/gmail1.png" alt="gmail"></a>
+            </form>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 My Website. Tüm Hakları Saklıdır.</p>
+    </footer>
+</body>
+</html>

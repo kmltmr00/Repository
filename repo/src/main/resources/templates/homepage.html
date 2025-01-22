@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(-45deg, #6a11cb, #2575fc, #ff6f61, #ffd700);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo {
+            position: absolute;
+            left: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ffd700;
+        }
+
+        .auth {
+            position: absolute;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .auth p{
+            margin-right:50px;
+        }
+
+
+        .auth a {
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            padding: 5px 10px;
+            background: #ff6f61;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .auth a:hover {
+            background: #ffd700;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .content {
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .content h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .content p {
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">My Repository</div>
+        <nav>
+            <a href="http://localhost:8080/api/users/HomePage">Home</a>
+            <a href="http://localhost:8080/api/users/Project">Project</a>
+            <a href="http://localhost:8080/api/users/About">About & Contact</a>
+        </nav>
+        <div class="auth">
+            <!-- Dynamically rnder links based on login status -->
+            <div>
+                <p>Hoşgeldiniz, <span th:text="${username}"></span>!</p>
+                <a href="/api/users/logout" class="logout-button">Çıkış Yap</a>
+
+            </div>
+            
+        </div>
+    </header>
+
+    <main>
+        <div class="content">
+            <h1>Web Siteme Hoşgeldiniz.</h1>
+            <p>Projelerimi görmek ve bana mesaj göndermek için sitemi keşfet!</p>
+        </div>
+    </main>
+</body>
+</html>

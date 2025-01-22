@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proje Yönetimi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(-45deg, #6a11cb, #2575fc, #ff6f61, #ffd700);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ffd700;
+        }
+
+        .content {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-container {
+            margin-bottom: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: #ffd700;
+        }
+
+        .form-container {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+        }
+
+        .form-container input, .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .user-list {
+            margin-top: 20px;
+        }
+
+        .user-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-list table, .user-list th, .user-list td {
+            border: 1px solid #ccc;
+        }
+
+        .user-list th, .user-list td {
+            padding: 10px;
+            text-align: center;
+        }
+        
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">My Repository</div>
+    <nav style="margin:0 auto;">
+        <a href="http://localhost:8080/api/users/admin">Home</a>
+        <a href="http://localhost:8080/api/users/adminuser">Kullanıcı Yönetimi</a>
+        <a href="http://localhost:8080/apis/ProjectControl">Proje Yönetimi</a>
+    </nav>
+  
+</header>
+
+<main>
+    <div class="content">
+        <h2>Proje Yönetimi</h2>
+        <div class="button-container">
+            <button onclick="showAddProjectForm()">Proje Ekle</button>
+            <button onclick="showDeleteProjectForm()">Proje Sil</button>
+            <button onclick="showViewProjects()">Proje Görüntüle</button>
+           
+        </div>
+
+        <!-- Proje Ekleme Formu -->
+        <div class="form-container" id="addProjectForm">
+            <h3>Proje Ekle</h3>
+            <div th:if="${error}" class="error-message" style="color: red;">
+                <p th:text="${error}"></p>
+            </div>
+            <form id="addProjectFormElement" enctype="multipart/form-data">
+                <label for="projectName">Proje Adı:</label>
+                <input type="text" id="projectName" name="projectName" placeholder="Proje adı girin">
+
+                <label for="projectDescription">Proje Açıklaması:</label>
+                <textarea id="projectDescription" name="projectDescription" placeholder="Proje açıklamasını girin"></textarea>
+                <label for="projectFile">Proje Dosyası:</label>
+                <input type="file" id="projectFile" name="projectFile">
+
+                <button type="submit">Ekle</button>
+            </form>
+        </div>
+
+        <!-- Proje Silme Formu -->
+        <div class="form-container" id="deleteProjectForm">
+            <h3>Proje Sil</h3>
+            <form>
+                <label for="projectId">Proje ID:</label>
+                <input type="text" id="projectId" name="projectId" placeholder="Proje ID girin">
+
+                <button type="submit">Sil</button>
+            </form>
+        </div>
+
+      
+        
+
+        <!-- Projeler Listesi -->
+        <div class="user-list" id="projectList">
+            <h3>Projeler</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Proje Adı</th>
+                        <th>Açıklama</th>
+                        <th> Proje Yolu</th>
+                        <th>Kullanıcı ID</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                   
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Proje Ekleme Formunu Gösterme
+    function showAddProjectForm() {
+        document.getElementById('addProjectForm').style.display = 'block';
+        document.getElementById('deleteProjectForm').style.display = 'none';
+        document.getElementById('projectList').style.display = 'none';
+    
+        document.getElementById("addProjectFormElement").addEventListener("submit", function(event) {
+            event.preventDefault();
+    
+            const formData = new FormData();
+            formData.append("projectName", document.getElementById("projectName").value);
+            formData.append("projectDescription", document.getElementById("projectDescription").value);
+    
+            const fileInput = document.getElementById("projectFile");
+            if (fileInput.files.length === 0) {
+                alert("Lütfen bir dosya seçin.");
+                return; // Dosya seçilmemişse işlemi durdurur
+            }
+    
+            formData.append("file", fileInput.files[0]); // Backend tarafında "file" parametresi bekliyor
+    
+            fetch(`/apis/upload`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())  // Düz metin döndüğü için response.text() kullanmalıyız
+            .then(data => {
+                alert(data);  // Backend'den gelen yanıt metni burada gösterilecek
+                // Formu temizle
+                document.getElementById("projectName").value="";
+                document.getElementById("projectDescription").value="";
+                document.getElementById("projectFile").value="";
+            })
+            .catch(error => {
+                console.error("Proje eklenirken hata oluştu:" + error);
+                alert("Proje eklenirken bir hata oluştu." + error.message);
+            });
+        });
+    }
+    
+    // Proje Silme Formunu Gösterme
+    function showDeleteProjectForm() {
+        document.getElementById('deleteProjectForm').style.display = 'block';
+        document.getElementById('addProjectForm').style.display = 'none';
+        document.getElementById('projectList').style.display = 'none';
+         // Silme işlemi fonksiyonunu burada tanımla
+         document.querySelector('#deleteProjectForm form').onsubmit = function(event) {
+            event.preventDefault();
+            const projectId = document.getElementById("projectId").value;
+    
+            fetch(`/apis/delete/${projectId}`, {
+                method: "DELETE"
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Proje başarıyla silindi.");
+                    document.getElementById("projectId").value="";
+                } else {
+                    alert("Proje silinemedi ,Proje Bulunamadı.");
+                }
+            })
+            .catch(error => console.error("Hata oluştu:", error));
+        };
+    }
+
+    // Projeleri Görüntüleme
+    function showViewProjects() {
+        document.getElementById('projectList').style.display = 'block';
+        document.getElementById('addProjectForm').style.display = 'none';
+        document.getElementById('deleteProjectForm').style.display = 'none';
+       
+        fetch('/apis/projects')
+        .then(response=>response.json())
+        .then(data=>{
+            const tbody=document.querySelector("#projectList tbody");
+            tbody.innerHTML="";
+            data.forEach(project=>{
+                const row=`
+                    <tr>
+                        <td>${project.id}</td>
+                        <td>${project.project_name}</td>
+                        <td>${project.description}</td>
+                        <td>${project.file_path}</td>
+                        <td>${project.user_id}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        })
+        .catch(error =>console.error("Hata oluştu.",error));
+    }
+
+    
+</script>
+
+</body>
+</html>

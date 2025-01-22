@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(-45deg, #6a11cb, #2575fc, #ff6f61, #ffd700);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo {
+            position: absolute;
+            left: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ffd700;
+        }
+
+        .auth {
+            position: absolute;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth a {
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            padding: 5px 10px;
+            background: #ff6f61;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .auth a:hover {
+            background: #ffd700;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            flex-direction: column;
+        }
+
+        #project-details {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #project-details h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        #project-details p {
+            color: #555;
+            font-size: 18px;
+        }
+
+        /* Kod içeriği için stil */
+        pre {
+            background:rgb(171, 0, 0);
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-top: 20px;
+            font-size: 16px;
+            font-family: "Courier New", Courier, monospace;
+        }
+
+        /* Highlight.js teması */
+        .hljs {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            border-radius: 8px;
+        }
+
+        /* Bağlantılar için hover efekt */
+        a {
+            text-decoration: none;
+            color: #ff6f61;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #ffd700;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <div class="logo">My Repository</div>
+        <nav>
+            <a href="http://localhost:8080/api/users/HomePage">Home</a>
+            <a href="http://localhost:8080/api/users/Project">Project</a>
+            <a href="http://localhost:8080/api/users/About">About & Contact</a>
+        </nav>
+    </header>
+    <main>
+        <div id="project-details">
+            <h1 id="project-title">Loading...</h1>
+            <p id="project-description"></p>
+           
+        </div>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const params = new URLSearchParams(window.location.search);
+            const projectId = params.get("id");
+
+            if (!projectId) {
+                document.getElementById("project-details").textContent = "Geçerli bir proje ID'si sağlanmadı.";
+                return;
+            }
+
+            fetch(`/apis/projects/${projectId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Proje bilgisi alınamadı.");
+                    }
+                    return response.json();
+                })
+                .then(project => {
+                    const projectTitle = document.getElementById("project-title");
+                    const projectDescription = document.getElementById("project-description");
+
+                    if (projectTitle && projectDescription) {
+                        projectTitle.textContent = project.project_name;
+                        projectDescription.textContent = project.description;
+                    }
+
+                    return fetch(`/apis/project/file/${projectId}`);
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Dosya içeriği alınamadı.");
+                    }
+                    return response.text();
+                })
+                .then(fileContent => {
+                    const preElement = document.createElement("pre");
+                    preElement.textContent = fileContent;
+                    const projectDetails = document.getElementById("project-details");
+                    if (projectDetails) {
+                        projectDetails.appendChild(preElement);
+                        hljs.highlightBlock(preElement); // Highlight.js ile renklendirme
+                    }
+                })
+                .catch(error => {
+                    console.error("Hata:", error);
+                    document.getElementById("project-details").textContent = "Proje detayları yüklenirken bir hata oluştu: " + error.message;
+                });
+        });
+    </script>
+</body>
+</html>

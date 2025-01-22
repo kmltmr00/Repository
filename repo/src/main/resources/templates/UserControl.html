@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kullanıcı Yönetimi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(-45deg, #6a11cb, #2575fc, #ff6f61, #ffd700);
+            background-size: 400% 400%;
+            animation: gradientBG 10s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #ffd700;
+        }
+
+        .content {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-container {
+            margin-bottom: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .button-container button:hover {
+            background-color: #ffd700;
+        }
+
+        .form-container {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .user-list {
+            margin-top: 20px;
+        }
+
+        .user-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-list table, .user-list th, .user-list td {
+            border: 1px solid #ccc;
+        }
+
+        .user-list th, .user-list td {
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">My Repository</div>
+    <nav style="margin:0 auto;">
+        <a href="http://localhost:8080/api/users/admin">Home</a>
+        <a href="http://localhost:8080/api/users/adminuser">Kullanıcı Yönetimi</a>
+        <a href="http://localhost:8080/apis/ProjectControl">Proje Yönetimi</a>
+    </nav>
+</header>
+
+<main>
+    <div class="content">
+        <h2>Kullanıcı Yönetimi</h2>
+        <div class="button-container">
+            <button onclick="showAddUserForm()">Kullanıcı Ekle</button>
+            <button onclick="showDeleteUserForm()">Kullanıcı Sil</button>
+            <button onclick="showViewUsers()">Kullanıcı Görüntüle</button>
+        </div>
+
+        <!-- Kullanıcı Ekleme Formu -->
+        <div class="form-container" id="addUserForm" >
+            <h3>Kullanıcı Ekle</h3>
+            <div th:if="${error}" class="error-message" style="color: red;">
+                <p th:text="${error}"></p>
+            </div>
+            <form onsubmit="showAddUserForm()">
+                <label for="username">Kullanıcı Adı:</label>
+                <input type="text" id="username" name="username" placeholder="Kullanıcı adı girin">
+
+                <label for="password">Şifre:</label>
+                <input type="password" id="password" name="user_password" placeholder="Şifre girin">
+
+                <label for="email">E-posta:</label>
+                <input type="email" id="email" name="email" placeholder="E-posta girin" required>
+
+                <button type="submit">Ekle</button>
+            </form>
+        </div>
+
+        <!-- Kullanıcı Silme Formu -->
+        <div class="form-container" id="deleteUserForm">
+            <h3>Kullanıcı Sil</h3>
+            <form onsubmit="showDeleteUserForm()" >
+                <label for="userId">Kullanıcı Adı:</label>
+                <input type="number" id="userId" name="userId" placeholder="Kullanıcı ID girin">
+
+                <button type="submit">Sil</button>
+            </form>
+        </div>
+
+        <!-- Kullanıcılar Listesi -->
+        <div class="user-list" id="userList">
+            <h3>Kullanıcılar</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Kullanıcı Adı</th>
+                        <th>E-posta</th>
+                        <th>Şifre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<script>
+    
+    // Kullanıcı Ekleme Formunu Gösterme
+    function showAddUserForm() {
+        document.getElementById('addUserForm').style.display = 'block';
+        document.getElementById('deleteUserForm').style.display = 'none';
+        document.getElementById('userList').style.display = 'none';
+    
+        document.querySelector('#addUserForm form').onsubmit = function(event) {
+            event.preventDefault();
+    
+            const formData = new URLSearchParams({
+                username: document.getElementById("username").value,
+                password: document.getElementById("password").value,
+                email: document.getElementById("email").value
+            });
+    
+            fetch(`/api/users/addAdmin?${formData.toString()}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Kullanıcı başarıyla eklendi.");
+                    document.getElementById("username").value = "";
+                    document.getElementById("password").value = "";
+                    document.getElementById("email").value = "";
+                } else {
+                    return response.json().then(errorData => {
+                        alert("Hata: " + (errorData.message || "Kullanıcı eklenemedi."));
+                    });
+                }
+            })
+            .catch(error => console.error("Hata oluştu:", error));
+         
+        };
+    }
+    
+    
+    
+    
+    // Kullanıcı Silme Formunu Gösterme
+    function showDeleteUserForm() {
+        document.getElementById('deleteUserForm').style.display = 'block';
+        document.getElementById('addUserForm').style.display = 'none';
+        document.getElementById('userList').style.display = 'none';
+        
+        // Silme işlemi fonksiyonunu burada tanımla
+        document.querySelector('#deleteUserForm form').onsubmit = function(event) {
+            event.preventDefault();
+            const userId = document.getElementById("userId").value;
+    
+            fetch(`/api/users/delete/${userId}`, {
+                method: "DELETE"
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Kullanıcı başarıyla silindi.");
+                    document.getElementById("userId").value="";
+                } else {
+                    alert("Kullanıcı silinemedi. Kullanıcı bulunamadı.");
+                }
+            })
+            .catch(error => console.error("Hata oluştu:", error));
+        };
+    }
+    
+    // Kullanıcıları Görüntüleme
+    function showViewUsers() {
+        document.getElementById('userList').style.display = 'block';
+        document.getElementById('addUserForm').style.display = 'none';
+        document.getElementById('deleteUserForm').style.display = 'none';
+        fetch('/api/users/view')
+        .then(response => response.json()) // JSON formatında veri bekleniyor
+        .then(data => {
+            const tbody = document.querySelector("#userList tbody");
+            tbody.innerHTML = ""; // Tabloyu temizle
+            data.forEach(user => {
+                const row = `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${user.user_password}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        })
+        .catch(error => console.error("Hata oluştu: ", error));
+    }
+</script>
+
+</body>
+</html>
